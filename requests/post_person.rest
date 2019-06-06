@@ -1,0 +1,27 @@
+POST http://localhost:3001/persons
+Content-Type: application/json
+
+{
+  "name": "Jaakko Ykkönen",
+  "number": "123-567432"
+}
+
+###
+
+POST http://localhost:3001/persons
+Content-Type: application/json
+
+{
+  "name": "",
+  "number": "333-567432"
+}
+
+###
+
+POST http://localhost:3001/persons
+Content-Type: application/json
+
+{
+  "name": "Aku Ankka",
+  "number": ""
+}
