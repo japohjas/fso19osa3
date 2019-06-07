@@ -28,6 +28,7 @@ let persons = [
   }
 ]
 
+app.use(express.static('build'))
 app.use(cors())
 app.use(bodyParser.json())
 
@@ -37,7 +38,7 @@ morgan.token('body', function (req, res) { return JSON.stringify(req.body) })
 app.use(morgan(':method :url :status :response-time ms - :res[content-length] :body - :req[content-length]'))
 
 
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
   res.send('<h1>Hello World!</h1>')
 })
 
@@ -46,11 +47,11 @@ app.get('/info', (req, res) => {
   res.send(info)
 })
 
-app.get('/persons', (req, res) => {
+app.get('/api/persons', (req, res) => {
   res.json(persons)
 })
 
-app.get('/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
   const person = persons.find(p => p.id === id)
 
@@ -61,14 +62,14 @@ app.get('/persons/:id', (request, response) => {
   } 
 })
 
-app.delete('/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
   persons = persons.filter(p => p.id !== id)
 
   response.status(204).end()
 })
 
-app.post('/persons/', (request, response) => {
+app.post('/api/persons/', (request, response) => {
   const body = request.body
   
   if (persons.find(p => p.name === body.name)) {
@@ -100,6 +101,11 @@ app.post('/persons/', (request, response) => {
   response.json(person)
 })
 
+const error = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(error)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
