@@ -1,34 +1,10 @@
-require('dotenv').config()
 const express = require('express')
 const app = express()
+require('dotenv').config()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
-const cors = require('cors')
 const Person = require('./models/person')
-
-
-let persons = [
-  {
-    name: "Arto Hellas",
-    number: "040-123456",
-    id: 1
-  },
-  {
-    name: "Ada Lovelace",
-    number: "39-44-532523",
-    id: 2
-  },
-  {
-    name: "Dan Abramow",
-    number: "12-43-234345",
-    id: 3
-  },
-  {
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-    id: 4
-  }
-]
+const cors = require('cors')
 
 app.use(express.static('build'))
 app.use(cors())
@@ -39,8 +15,7 @@ app.use(bodyParser.json())
 morgan.token('body', function (req, res) { return JSON.stringify(req.body) })
 app.use(morgan(':method :url :status :response-time ms - :res[content-length] :body - :req[content-length]'))
 
-
-app.get('/api', (req, res) => {
+app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>')
 })
 
@@ -78,13 +53,13 @@ app.delete('/api/persons/:id', (request, response, next) => {
 
 app.post('/api/persons/', (request, response) => {
   const body = request.body
-  
+  /*
   if (persons.find(p => p.name === body.name)) {
     return response.status(400).json({ 
       error: 'name must be unique' 
     })
   }
-
+  */
   if (!body.name) {
     return response.status(400).json({ 
       error: 'name missing' 
@@ -141,6 +116,7 @@ const errorHandler = (error, request, response, next) => {
 app.use(errorHandler)
 
 const PORT = process.env.PORT
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
