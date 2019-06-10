@@ -19,9 +19,10 @@ app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>')
 })
 
-app.get('/info', (req, res) => {
-  const info = `<p>Phonebook has info for ${persons.length} people</p><p>${new Date()}</p>`
-  res.send(info)
+app.get('/info', (request, response) => {
+  Person.find({}).then(persons => {
+    response.send(`<p>Phonebook has info for ${persons.length} people</p><p>${new Date()}</p>`)
+  })
 })
 
 app.get('/api/persons', (request, response) => {
@@ -53,30 +54,18 @@ app.delete('/api/persons/:id', (request, response, next) => {
 
 app.post('/api/persons/', (request, response, next) => {
   const body = request.body
-/*
-  if (!body.name) {
-    return response.status(400).json({ 
-      error: 'name missing' 
-    })
-  }
 
-  if (!body.number) {
-    return response.status(400).json({ 
-      error: 'number missing' 
-    })
-  }
-*/ 
   const person = new Person({
     name: body.name,
     number: body.number,
   })
 
   person.save()
-  .then(savedPerson => savedPerson.toJSON())
-  .then(savedAndFormattedPerson => {
-    response.json(savedAndFormattedPerson)
-  }) 
-  .catch(error => next(error)) 
+    .then(savedPerson => savedPerson.toJSON())
+    .then(savedAndFormattedPerson => {
+      response.json(savedAndFormattedPerson)
+    })
+    .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (request, response, next) => {

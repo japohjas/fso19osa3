@@ -1,15 +1,14 @@
- 
 const mongoose = require('mongoose')
+require('dotenv').config()
 
 if ( process.argv.length<3 ) {
   console.log('give password as argument')
   process.exit(1)
 }
 
-const password = process.argv[2]
+// const password = process.argv[2]
 
-const url =
-  `mongodb+srv://fullstack19:${password}@cluster0-9q1lh.mongodb.net/test?retryWrites=true&w=majority`
+const url = process.env.MONGODB_URI
 
 mongoose.connect(url, { useNewUrlParser: true })
 
@@ -29,8 +28,8 @@ if ( process.argv.length === 5) {
   })
 
   person.save().then(response => {
-    console.log(`added ${newName} number ${newNumber} to phonebook`);
-    mongoose.connection.close();
+    console.log(`added ${newName} number ${newNumber} to phonebook`)
+    mongoose.connection.close()
   })
 } else {
   console.log('phonebook:')
